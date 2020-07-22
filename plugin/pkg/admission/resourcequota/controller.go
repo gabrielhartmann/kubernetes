@@ -437,6 +437,7 @@ func CheckRequest(quotas []corev1.ResourceQuota, a admission.Attributes, evaluat
 	restrictedScopes := []corev1.ScopedResourceSelectorRequirement{}
 	for i := range quotas {
 		resourceQuota := quotas[i]
+		klog.Info("evaluating quota: %v", resourceQuota.Name)
 		scopeSelectors := getScopeSelectorsFromQuota(resourceQuota)
 		localRestrictedScopes, err := evaluator.MatchingScopes(inputObject, scopeSelectors)
 		if err != nil {
@@ -452,6 +453,7 @@ func CheckRequest(quotas []corev1.ResourceQuota, a admission.Attributes, evaluat
 			return quotas, err
 		}
 		if !match {
+			klog.Info("evaluator does not match")
 			continue
 		}
 
